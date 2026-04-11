@@ -1,0 +1,30 @@
+services:
+  frontend:
+    build: frontend
+    ports: 
+      - 80:80
+    depends_on:
+      - shortener
+
+  shortener:
+    build: shortener
+    ports: 
+      - 5000:5000
+ 
+  broker:
+    image: apache/kafka:4.2.0
+    ports:
+      - 9092:9092
+
+  datastore:
+    image: amazon/dynamodb-local
+    ports:
+      - 8000:8000
+
+  cache:
+    image: redis:alpine
+
+  redirector:
+    build: redirector
+    ports:
+      - 5001:5000

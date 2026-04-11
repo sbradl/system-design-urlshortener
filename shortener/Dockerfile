@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS builder
 WORKDIR /source
 
-COPY --link *.csproj .
+COPY --link Shortener.slnx .
 RUN dotnet restore
 
 COPY --link . .

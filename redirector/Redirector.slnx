@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Redirector/Redirector.csproj"/>
+  <Project Path="Redirector.Test/Redirector.Test.csproj"/>
+</Solution>

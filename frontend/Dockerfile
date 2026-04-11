@@ -7,10 +7,10 @@ RUN npm install -g @angular/cli@21
 COPY --link package.json package-lock.json ./
 RUN npm ci
 
-COPY . .
+COPY --link . .
 
 RUN npm run build
-
+RUN npm run test
 
 FROM nginx:1.29-alpine
 WORKDIR /app

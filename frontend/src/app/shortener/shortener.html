@@ -1,0 +1,15 @@
+<form (submit)="onSubmit($event)">
+  <fieldset role="group">
+    <input type="text" placeholder="URL" [formField]="form.sourceUrl" />
+    <input type="submit" value="Go"
+      [disabled]="form().invalid()"
+      [aria-busy]="shortenedUrl.isLoading()"/>
+  </fieldset>
+
+  @if(shortenedUrl.hasValue()) {
+  <span class="shortened-url">{{shortenedUrl.value().url}}</span>
+  } @else if (shortenedUrl.error()) {
+    <span class="error-message">Something went wrong</span>
+  }
+</form>
+

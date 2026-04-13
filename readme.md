@@ -9,11 +9,6 @@ Containers are used to build, test and run multiple components
 of a url shortener as shown in
 [this awesome video on the System Design Fight Club YouTube Channel](https://www.youtube.com/watch?v=tm-SWO9gUAU).
 
-Because it is a learning project without any deadlines
-it will be overengineered to practice my TDD skills as well as
-design pattern, clean code and whatever will be coming to my mind
-while I'm working on it.
-
 ## Setup
 
 Following software needs to be installed:

@@ -1,3 +1,3 @@
 export const environment = {
-  shortenerApiBaseUrl: 'http://localhost:5000'
+  shortenerApiBaseUrl: 'http://localhost:5000/api'
 };

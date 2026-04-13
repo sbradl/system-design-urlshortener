@@ -1,5 +1,5 @@
 import { httpResource } from '@angular/common/http';
-import { Component, signal } from '@angular/core';
+import { Component, effect, signal } from '@angular/core';
 import { form, FormField, required } from '@angular/forms/signals';
 import { environment } from '../../environments/environment';
 
@@ -19,30 +19,39 @@ interface ShortenerResponse {
 })
 export class Shortener {
   shortenedUrl = httpResource<ShortenerResponse>(() => {
-    const trigger = this.#sourceUrlEntered();
-    const sourceUrl = this.form.sourceUrl().value();
+    const request = this.#shortenedUrlRequest();
 
-    if (trigger === 0)
+    if (!request.sourceUrl)
       return;
 
     return ({
-      url: environment.shortenerApiBaseUrl + '/shorten',
+      url: environment.shortenerApiBaseUrl + '/urls',
       method: 'POST',
       body: {
-        'url': sourceUrl
+        'url': request.sourceUrl
       }
     })
   });
 
+  #shortenedUrlRequest = signal<ShortenerRequest>({ sourceUrl: '' });
+
   #model = signal<ShortenerRequest>({ sourceUrl: '' });
-  #sourceUrlEntered = signal(0);
 
   form = form(this.#model, (schemaPath) => {
     required(schemaPath.sourceUrl, { message: 'URL required' })
   });
 
+  constructor() {
+    effect(() => {
+      if (this.shortenedUrl.hasValue()) {
+        this.form.sourceUrl().value.set('');
+        this.form().reset();
+      }
+    });
+  }
+
   onSubmit(event: Event) {
     event.preventDefault();
-    this.#sourceUrlEntered.update(v => v + 1);
+    this.#shortenedUrlRequest.set(this.form().value());
   }
 }

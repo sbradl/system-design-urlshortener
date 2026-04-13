@@ -7,12 +7,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-
+builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
   options.AddDefaultPolicy(
       policy => policy
         .WithOrigins("http://localhost")
+        .WithOrigins("http://localhost:4200")
         .AllowAnyMethod()
         .AllowAnyHeader());
 });
@@ -26,8 +27,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors();
+app.MapControllers();
 // app.UseHttpsRedirection();
-
-app.MapPost("/shorten", () => new { url = "https://shortenedurl" });
 
 app.Run();

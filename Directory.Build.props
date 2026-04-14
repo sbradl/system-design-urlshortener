@@ -2,4 +2,11 @@
   <PropertyGroup>
     <ArtifactsPath>$(MSBuildThisFileDirectory)artifacts</ArtifactsPath>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 </Project>

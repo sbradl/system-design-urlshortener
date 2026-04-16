@@ -1,50 +1,98 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Shortener.Test;
 
 [TestClass]
 public class UrlsControllerTest
 {
-  [TestMethod]
-  public void GivenInvalidRequest_ReturnsBadRequest()
+  private readonly ShortenerService service = new ShortenerServiceDummy();
+  private readonly UrlsController controller;
+
+  public UrlsControllerTest()
   {
-    AssertBadRequest(new ShortenerRequest(string.Empty));
-    AssertBadRequest(new ShortenerRequest("   "));
-    AssertBadRequest(new ShortenerRequest("no-url"));
+    var kv = new Dictionary<string, string?>()
+    {
+      { "ShortenedUrlBase", "https://shortener.com"}
+    };
+
+    var configuration = new ConfigurationBuilder()
+      .AddInMemoryCollection(kv)
+      .Build();
+
+    controller = new UrlsController(configuration, service);
   }
 
   [TestMethod]
-  public void GivenHttpUrl_ReturnsBadRequest()
+  public async Task GivenInvalidRequest_ReturnsBadRequest()
   {
-    AssertBadRequest(new ShortenerRequest("http://test.com"));
+    await AssertBadRequest(new ShortenerRequest(string.Empty));
+    await AssertBadRequest(new ShortenerRequest("   "));
+    await AssertBadRequest(new ShortenerRequest("no-url"));
   }
 
   [TestMethod]
-  public void GivenValidHttpsUrl_ReturnsOk()
+  public async Task GivenNonHttpsUrl_ReturnsBadRequest()
   {
-    var result = Shorten("https://test.com");
+    await AssertBadRequest(new ShortenerRequest("http://test.com"));
+    await AssertBadRequest(new ShortenerRequest("ftp://test.com"));
+    await AssertBadRequest(new ShortenerRequest("file:///etc/passwd"));
+  }
+
+  [TestMethod]
+  public async Task GivenValidHttpsUrl_ReturnsOk()
+  {
+    var result = await Shorten("https://test.com");
     Assert.IsNotNull(result.Url);
   }
 
-  private void AssertBadRequest(ShortenerRequest request)
+  [TestMethod]
+  public async Task Shorten_ReturnsShortUrl()
   {
-    var result = Shorten(request);
+    var result = await Shorten("https://test.com");
+    Assert.StartsWith("https://shortener.com/", result.Url);
+  }
+
+  [TestMethod]
+  public async Task ShorteningSameUrl_ReturnsDifferentShortUrls()
+  {
+    var result1 = await Shorten("https://test.com");
+    var result2 = await Shorten("https://test.com");
+
+    Assert.AreNotEqual(result1.Url, result2.Url);
+  }
+
+  private async Task AssertBadRequest(ShortenerRequest request)
+  {
+    var result = await Shorten(request);
 
     Assert.IsInstanceOfType<BadRequestResult>(result.Result);
   }
 
-  private ShortenerResponse Shorten(string url)
+  private async Task<ShortenerResponse> Shorten(string url)
   {
     var result = Assert.IsInstanceOfType<OkObjectResult>(
-        new UrlsController()
-         .Shorten(new ShortenerRequest(url))
-          .Result);
+      (await controller.Shorten(new ShortenerRequest(url)))
+        .Result);
 
     return Assert.IsInstanceOfType<ShortenerResponse>(result.Value);
   }
 
-  private ActionResult<ShortenerResponse> Shorten(ShortenerRequest request)
+  private async Task<ActionResult<ShortenerResponse>> Shorten(ShortenerRequest request)
   {
-    return new UrlsController().Shorten(request);
+    return await controller.Shorten(request);
+  }
+
+  private sealed class ShortenerServiceDummy : ShortenerService
+  {
+    private int id;
+
+    public Task<string> Generate()
+    {
+      return Task.FromResult(id++.ToString());
+    }
   }
 }

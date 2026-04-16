@@ -1,5 +1,7 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace Shortener;
 
@@ -8,10 +10,10 @@ public record ShortenerResponse(string Url);
 
 [Route("api/[controller]")]
 [ApiController]
-public class UrlsController : ControllerBase
+public class UrlsController(IConfiguration configuration, ShortenerService service) : ControllerBase
 {
   [HttpPost]
-  public ActionResult<ShortenerResponse> Shorten(ShortenerRequest request)
+  public async Task<ActionResult<ShortenerResponse>> Shorten(ShortenerRequest request)
   {
     var url = request.Url;
 
@@ -21,6 +23,8 @@ public class UrlsController : ControllerBase
     if (uri.Scheme != Uri.UriSchemeHttps)
       return BadRequest();
 
-    return Ok(new ShortenerResponse("shorturl"));
+    var nextCode = await service.Generate();
+
+    return Ok(new ShortenerResponse(configuration["ShortenedUrlBase"] + "/" + nextCode));
   }
 }

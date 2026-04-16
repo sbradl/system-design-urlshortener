@@ -8,7 +8,7 @@ RUN dotnet restore
 
 COPY --link . .
 RUN dotnet test --no-restore &&\
-  dotnet publish Redirector/Redirector.csproj --no-restore -o /app
+  dotnet publish Redirector/Redirector.csproj --no-restore -c Release -o /app
 
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine

@@ -10,7 +10,7 @@ public record ShortenerResponse(string Url);
 
 [Route("api/[controller]")]
 [ApiController]
-public class UrlsController(IConfiguration configuration, ShortenerService service) : ControllerBase
+public class UrlsController(IConfiguration configuration, ShortenerService service, UrlStore urlStore) : ControllerBase
 {
   [HttpPost]
   public async Task<ActionResult<ShortenerResponse>> Shorten(ShortenerRequest request)
@@ -24,6 +24,7 @@ public class UrlsController(IConfiguration configuration, ShortenerService servi
       return BadRequest();
 
     var nextCode = await service.Generate();
+    await urlStore.Save(request.Url, nextCode);
 
     return Ok(new ShortenerResponse(configuration["ShortenedUrlBase"] + "/" + nextCode));
   }

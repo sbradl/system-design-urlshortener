@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ namespace Shortener.Test;
 public class UrlsControllerTest
 {
   private readonly ShortenerService service = new ShortenerServiceDummy();
+  private readonly UrlStoreMock urlStore = new UrlStoreMock();
   private readonly UrlsController controller;
 
   public UrlsControllerTest()
@@ -23,7 +25,8 @@ public class UrlsControllerTest
       .AddInMemoryCollection(kv)
       .Build();
 
-    controller = new UrlsController(configuration, service);
+
+    controller = new UrlsController(configuration, service, urlStore);
   }
 
   [TestMethod]
@@ -65,6 +68,15 @@ public class UrlsControllerTest
     Assert.AreNotEqual(result1.Url, result2.Url);
   }
 
+  [TestMethod]
+  public async Task ShortenedUrl_IsSaved()
+  {
+    var result = await Shorten("https://test.com");
+    string pathAndQuery = new Uri(result.Url).PathAndQuery.TrimStart('/');
+
+    Assert.AreEqual("https://test.com", urlStore.GetSourceUrlFor(pathAndQuery));
+  }
+
   private async Task AssertBadRequest(ShortenerRequest request)
   {
     var result = await Shorten(request);
@@ -93,6 +105,23 @@ public class UrlsControllerTest
     public Task<string> Generate()
     {
       return Task.FromResult(id++.ToString());
+    }
+  }
+
+  private sealed class UrlStoreMock : UrlStore
+  {
+    private readonly Dictionary<string, string> urls = [];
+
+    public Task Save(string sourceUrl, string shortUrlPath)
+    {
+      this.urls.Add(shortUrlPath, sourceUrl);
+
+      return Task.CompletedTask;
+    }
+
+    public string GetSourceUrlFor(string urlPath)
+    {
+      return this.urls[urlPath];
     }
   }
 }

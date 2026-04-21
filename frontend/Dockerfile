@@ -9,7 +9,8 @@ COPY --link . .
 
 RUN npm run build
 RUN npm run test
-
+ 
 FROM nginx:1.29-alpine
 WORKDIR /app
 COPY --link --from=builder /source/dist/*/browser /usr/share/nginx/html
+COPY --link nginx.conf /etc/nginx/conf.d/default.conf

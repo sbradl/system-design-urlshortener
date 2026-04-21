@@ -1,9 +1,24 @@
-var builder = WebApplication.CreateBuilder(args);
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 
-builder.Services.AddControllers();
+namespace Redirector;
 
-var app = builder.Build();
+public static class Program
+{
+  public static void Main(string[] args)
+  {
 
-app.MapControllers();
+    var builder = WebApplication.CreateBuilder(args);
 
-app.Run();
+    builder.Services.AddControllers();
+    builder.Services.AddSingleton(NpgsqlDataSource.Create(builder.Configuration["UrlStoreConnectionString"]!));
+    builder.Services.AddSingleton<UrlStore, PostgresUrlStore>();
+
+    var app = builder.Build();
+
+    app.MapControllers();
+
+    app.Run();
+  }
+}

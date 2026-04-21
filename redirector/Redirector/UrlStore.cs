@@ -1,4 +1,6 @@
-﻿namespace Redirector;
+﻿using System.Threading.Tasks;
+
+namespace Redirector;
 
 public interface UrlStore
 {

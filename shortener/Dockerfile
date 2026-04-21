@@ -7,8 +7,8 @@ COPY --link Shortener.Test/Shortener.Test.csproj ./Shortener.Test/Shortener.Test
 RUN dotnet restore
 
 COPY --link . .
-RUN dotnet test --no-restore &&\
-  dotnet publish Shortener/Shortener.csproj --no-restore -c Release -o /app
+RUN dotnet test --no-restore
+RUN dotnet publish Shortener/Shortener.csproj --no-restore -c Release -o /app
 
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine

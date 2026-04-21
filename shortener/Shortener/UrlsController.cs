@@ -24,7 +24,8 @@ public class UrlsController(IConfiguration configuration, ShortenerService servi
       return BadRequest();
 
     var nextCode = await service.Generate();
-    await urlStore.Save(request.Url, nextCode);
+
+    await urlStore.Save(url, nextCode);
 
     return Ok(new ShortenerResponse(configuration["ShortenedUrlBase"] + "/" + nextCode));
   }

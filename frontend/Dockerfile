@@ -7,7 +7,8 @@ RUN npm ci
 
 COPY --link . .
 
-RUN npm run test && RUN npm run build
+RUN npm run build
+RUN npm run test
 
 FROM nginx:1.29-alpine
 WORKDIR /app

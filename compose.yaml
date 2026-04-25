@@ -6,10 +6,21 @@ services:
     depends_on:
       - shortener
 
+  idstore_redis:
+    image: redis:8.6.2-alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - ./data/idstore_redis:/data
+    command: redis-server --appendonly yes
+
   shortener:
     build: shortener
-    ports: 
+    ports:
       - 5000:8080
+    depends_on:
+      - urlstore_pg
+      - idstore_redis
  
   redirector:
     build: redirector
@@ -27,8 +38,6 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./data/urlstore_pg:/var/lib/postgresql
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
 
-volumes:
-  postgres_data:

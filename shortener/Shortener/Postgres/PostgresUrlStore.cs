@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Npgsql;
 
-namespace Shortener;
+namespace Shortener.Postgres;
 
 public class PostgresUrlStore(NpgsqlDataSource dataSource) : UrlStore
 {

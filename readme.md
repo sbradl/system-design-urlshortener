@@ -34,12 +34,27 @@ Why Angular? Because I know it and wanted to play with the latest version.
 
 Dotnet WepApi
 
-### Broker
+### Id store
 
-### Data store
+redis cache for fast generation of ids
 
-### Cache
+### Url Data store
+
+Postgres
 
 ### Redirector Service
 
 Dotnet WepApi
+
+### Redirector cache
+
+redis cache for most used urls
+
+## TODO
+- Integration tests
+- E2E tests
+- Performance tests
+- Redirector cache
+- Custom short code
+- Optional expiration date + cleanup after expiration
+- Authentication

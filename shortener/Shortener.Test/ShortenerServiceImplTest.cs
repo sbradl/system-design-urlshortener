@@ -54,7 +54,7 @@ public class ShortenerServiceImplTest
 
     var key = await service.Generate();
 
-    Assert.IsTrue(key.All(c => validChars.Contains(c)));
+    Assert.IsTrue(key.All(validChars.Contains));
   }
 
   private sealed class UniqueIdServiceDummy(ulong nextId = 0) : UniqueIdService

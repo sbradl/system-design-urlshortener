@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="shortener/Shortener/Shortener.csproj" />
+  <Project Path="shortener/Shortener.Test/Shortener.Test.csproj" />
+  <Project Path="redirector/Redirector/Redirector.csproj" />
+  <Project Path="redirector/Redirector.Test/Redirector.Test.csproj" />
+  <Project Path="UrlShortener.IntegrationTests/UrlShortener.IntegrationTests.csproj" />
+</Solution>

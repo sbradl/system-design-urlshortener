@@ -18,7 +18,7 @@ public class UrlsControllerTest
   {
     var kv = new Dictionary<string, string?>()
     {
-      { "ShortenedUrlBase", "https://shortener.com"}
+      { "SHORTENED_URL_BASE", "https://shortener.com"}
     };
 
     var configuration = new ConfigurationBuilder()

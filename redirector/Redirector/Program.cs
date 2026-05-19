@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Npgsql;
+using Microsoft.Extensions.Hosting;
 
 namespace Redirector;
 
@@ -11,9 +11,9 @@ public static class Program
 
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.Services.AddControllers();
-    builder.Services.AddSingleton(NpgsqlDataSource.Create(builder.Configuration["UrlStoreConnectionString"]!));
+    builder.AddNpgsqlDataSource("urlshortener");
     builder.Services.AddSingleton<UrlStore, PostgresUrlStore>();
+    builder.Services.AddControllers();
 
     var app = builder.Build();
 

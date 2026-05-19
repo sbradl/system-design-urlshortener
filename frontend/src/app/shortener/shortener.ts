@@ -1,7 +1,6 @@
 import { httpResource } from '@angular/common/http';
 import { Component, effect, signal } from '@angular/core';
 import { form, FormField, required } from '@angular/forms/signals';
-import { environment } from '../../environments/environment';
 
 interface ShortenerRequest {
   sourceUrl: string;
@@ -25,7 +24,7 @@ export class Shortener {
       return;
 
     return ({
-      url: environment.shortenerApiBaseUrl + '/urls',
+      url: '/api/urls',
       method: 'POST',
       body: {
         'url': request.sourceUrl

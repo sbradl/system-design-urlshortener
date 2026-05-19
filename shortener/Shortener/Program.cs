@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Shortener.Postgres;
 using Shortener.Redis;
 
@@ -21,10 +22,10 @@ public static class Program
         .AllowAnyMethod()
         .AllowAnyHeader());
     });
-    builder.Services.AddRedis(builder.Configuration["RedisIdStoreConnectionString"]!);
+    builder.Services.AddRedis("idstore-redis");
     builder.Services.AddSingleton<UniqueIdService, RedisUniqueIdService>();
     builder.Services.AddSingleton<ShortenerService, ShortenerServiceImpl>();
-    builder.Services.AddPostgres(builder.Configuration["PostgresUrlStoreConnectionString"]!);
+    builder.AddNpgsqlDataSource("urlshortener");
     builder.Services.AddSingleton<UrlStore, PostgresUrlStore>();
 
     var app = builder.Build();

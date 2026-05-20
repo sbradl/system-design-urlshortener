@@ -8,4 +8,8 @@
     <PackageReference Include="Aspire.Npgsql" Version="13.3.3" />
     <PackageReference Include="Aspire.StackExchange.Redis" Version="13.3.3" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../UrlShortener.ServiceDefaults/UrlShortener.ServiceDefaults.csproj" />
+  </ItemGroup>
 </Project>

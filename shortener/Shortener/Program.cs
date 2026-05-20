@@ -11,17 +11,9 @@ public static class Program
   public static void Main(string[] args)
   {
     var builder = WebApplication.CreateBuilder(args);
+    builder.AddServiceDefaults();
 
     builder.Services.AddControllers();
-    builder.Services.AddCors(options =>
-    {
-      options.AddDefaultPolicy(
-      policy => policy
-        .WithOrigins("http://localhost")
-        .WithOrigins("http://localhost:4200")
-        .AllowAnyMethod()
-        .AllowAnyHeader());
-    });
     builder.Services.AddRedis("idstore-redis");
     builder.Services.AddSingleton<UniqueIdService, RedisUniqueIdService>();
     builder.Services.AddSingleton<ShortenerService, ShortenerServiceImpl>();
@@ -29,7 +21,6 @@ public static class Program
     builder.Services.AddSingleton<UrlStore, PostgresUrlStore>();
 
     var app = builder.Build();
-    app.UseCors();
     app.MapControllers();
     // app.UseHttpsRedirection();
 

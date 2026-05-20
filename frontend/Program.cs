@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using Yarp.ReverseProxy.Configuration;
+
 namespace FrontendHost;
 
 public static class Program
@@ -10,6 +12,8 @@ public static class Program
   public static void Main(string[] args)
   {
     var builder = WebApplication.CreateBuilder(args);
+
+    builder.AddServiceDefaults();
 
     var shortenerApiUrl = builder.Configuration["services:shortener:https:0"]
               ?? builder.Configuration["services:shortener:http:0"]

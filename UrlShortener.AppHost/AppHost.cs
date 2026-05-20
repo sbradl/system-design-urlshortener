@@ -20,22 +20,24 @@ var idstore_redis = builder.AddRedis("idstore-redis")
     .WithArgs("--appendonly", "yes");
 
 var redirector = builder.AddProject<Projects.Redirector>("redirector")
+    .WithHttpEndpoint()
     .WithReference(urlshortener)
-    .WithHttpEndpoint(port: 0, isProxied: true)
     .WaitFor(urlstore_pg);
 
 var redirectorUri = redirector.GetEndpoint("http");
 
 var shortener = builder.AddProject<Projects.Shortener>("shortener")
+    .WithHttpEndpoint()
     .WithEnvironment("SHORTENED_URL_BASE", redirectorUri)
     .WithReference(urlshortener)
     .WithReference(idstore_redis)
     .WaitFor(urlstore_pg)
     .WaitFor(idstore_redis);
 
+var shortenerUrl = shortener.GetEndpoint("http");
 
-var frontend = builder.AddDockerfile("frontend", "../frontend")
-    .WithHttpEndpoint(port: 8080, targetPort: 8080)
+var frontend = builder.AddProject<Projects.FrontendHost>("frontend")
+    .WithHttpEndpoint(targetPort: 8080)
     .WithReference(shortener)
     .WaitFor(shortener);
 

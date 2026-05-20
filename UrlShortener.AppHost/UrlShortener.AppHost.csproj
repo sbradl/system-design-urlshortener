@@ -16,5 +16,6 @@
   <ItemGroup>
     <ProjectReference Include="../shortener/Shortener/Shortener.csproj" />
     <ProjectReference Include="../redirector/Redirector/Redirector.csproj" />
+    <ProjectReference Include="../frontend/FrontendHost.csproj" />
   </ItemGroup>
 </Project>

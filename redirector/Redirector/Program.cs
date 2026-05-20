@@ -10,6 +10,7 @@ public static class Program
   {
 
     var builder = WebApplication.CreateBuilder(args);
+    builder.AddServiceDefaults();
 
     builder.AddNpgsqlDataSource("urlshortener");
     builder.Services.AddSingleton<UrlStore, PostgresUrlStore>();

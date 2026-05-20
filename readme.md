@@ -15,12 +15,10 @@ Following software needs to be installed:
 
 - docker
 - docker buildx
-- docker compose
-- optional: [Dive](https://github.com/wagoodman/dive) - a very handy tool to look into docker images to see their contents
 
 ## Build and Run
 
-Run ```docker compose up``` in the main directory.
+Run apphost project
 
 ## Design
 
@@ -51,9 +49,11 @@ Dotnet WepApi
 redis cache for most used urls
 
 ## TODO
+
 - Integration tests
 - E2E tests
 - Performance tests
+- Redis Telemetry (cache hit/miss/get/set)
 - Redirector cache
 - Custom short code
 - Optional expiration date + cleanup after expiration
